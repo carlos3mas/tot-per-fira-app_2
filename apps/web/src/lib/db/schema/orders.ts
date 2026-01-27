@@ -8,12 +8,13 @@ export const orders = sqliteTable("orders", {
   correoElectronico: text("correo_electronico").notNull(),
   numeroTelefono: text("numero_telefono").notNull(),
   segundoNumeroTelefono: text("segundo_numero_telefono"),
-  estado: text("estado", { 
-    enum: ["pendiente", "confirmado", "en_proceso", "completado", "cancelado"] 
+  estado: text("estado", {
+    enum: ["pendiente", "confirmado", "en_proceso", "completado", "cancelado"]
   }).notNull().default("pendiente"),
   totalEstimado: real("total_estimado"),
   fechaCreacion: integer("fecha_creacion", { mode: "timestamp" }).notNull(),
   fechaActualizacion: integer("fecha_actualizacion", { mode: "timestamp" }).notNull(),
+  comentarios: text("comentarios"),
   notas: text("notas"),
 });
 

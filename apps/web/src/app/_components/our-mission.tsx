@@ -9,9 +9,9 @@ export function OurMission() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <span className="text-lg text-[var(--secondary-color)] mb-4 font-clash-display font-bold">NUESTRA MISIÓN</span>
-              <h3 className="text-4xl md:text-6xl font-bold font-khand text-[var(--primary-color)] mb-4">
+              <h2 className="text-4xl md:text-6xl font-bold font-khand text-[var(--primary-color)] mb-4">
                 Nos esforzamos en darte un trato personalizado
-              </h3>
+              </h2>
             </div>
             <div>
               <div className="space-y-6">

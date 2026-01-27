@@ -8,9 +8,9 @@ export function CTASection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
           <div className="p-4 sm:border-b-0 border-b border-gray-300">
             <span className="text-base md:text-lg text-[var(--secondary-color)] mb-4 font-clash-display font-bold">DÉJALO EN NUESTRAS MANOS Y LLÉVATE TODO EL MÉRITO</span>
-            <h3 className="text-4xl md:text-6xl font-bold font-khand text-[var(--primary-color)] mb-4">
+            <h2 className="text-4xl md:text-6xl font-bold font-khand text-[var(--primary-color)] mb-4">
               Sabemos mejor que nadie el coñazo de organizarlo todo
-            </h3>
+            </h2>
 
           </div>
           <div className="grid grid-rows-4">

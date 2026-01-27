@@ -12,7 +12,10 @@ export function Navbar() {
 
   const navigationLinks = [
     { href: "/", label: "Inicio" },
-    { href: "/fira-onda", label: "Fira d'Onda 2025" },
+    { href: "/eventos-corporativos", label: "Eventos Corporativos" },
+    { href: "/eventos-personalizados", label: "Eventos Personalizados" },
+    { href: "/fiestas-populares", label: "Fiestas Populares" },
+    { href: "/magdalena-2026", label: "Magdalena 2026" },
   ]
 
   return (

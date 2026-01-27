@@ -15,7 +15,7 @@ export default function   FrequentQuestions() {
     },
     {
       question: "¿En qué zonas trabajamos?",
-      answer: "Trabajamos principalmente en la Comunidad Valenciana, con sede en Onda, Castellón. Para eventos fuera de esta zona, consúltanos y estudiaremos la viabilidad."
+      answer: "Trabajamos principalmente en la Comunidad Valenciana, con sede en Onda, Castellón. Hemos trabajado en pueblos como Alcora, Villarreal, Burriana y Castellón. Para eventos fuera de esta zona, consúltanos y estudiaremos la viabilidad."
     },
     {
       question: "¿Cuánto tiempo de antelación necesito para reservar?",

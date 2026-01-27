@@ -13,4 +13,5 @@ export interface Presupuesto {
   objetosPedido: LineaPresupuesto[];
   nombrePenya?: string;
   segundoNumeroTelefono?: string;
+  comentarios?: string;
 } 

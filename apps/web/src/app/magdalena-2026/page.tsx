@@ -7,11 +7,13 @@ import { CTASection } from "./_components/cta-section"
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Fira d'Onda 2025 | Organiza tus fiestas en Onda",
-  description: "Solicita tu presupuesto para estas ferias de Onda 2025 y deja que nosotros nos ocupemos de todo.",
+  title: "Magdalena 2026 | Organiza tus fiestas en Castellón",
+  description: "Solicita tu presupuesto para las fiestas de la Magdalena 2026 en Castellón de la Plana y deja que nosotros nos ocupemos de todo.",
   keywords: [
-    "fira d'onda",
-    "fiestas",
+    "magdalena 2026",
+    "magdalena castellón",
+    "fiestas magdalena",
+    "fiestas castellón de la plana",
     "alquiler de equipos de sonido",
     "alquiler de congeladores", 
     "alquiler de botelleros",
@@ -23,21 +25,18 @@ export const metadata: Metadata = {
     "botellas de refresco",
     "botellas de cerveza",
     "botellas de vino",
-    "botellas de agua",
-    "botellas de refresco",
     "organización de fiestas",
     "organización de eventos",
-    "organización de fiestas en Onda",
-    "organización de eventos en Onda",
     "organización de fiestas en Castellón",
     "organización de eventos en Castellón",
+    "collas magdalena",
     "confianza",
     "conocemos ambiente",
     "precios justos"
   ],
 };
 
-export default function FiraOndaPage() {
+export default function MagdalenaPage() {
   return (
     <div className="min-h-screen">
       <div className="px-2">

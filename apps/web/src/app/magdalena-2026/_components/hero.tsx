@@ -32,25 +32,25 @@ export function Hero() {
             <div className="relative z-10">
               {/* Main headline */}
               <div className="mb-8">
-                <span className="text-md lg:text-xl font-semibold font-clash-display text-white">¡Fira d'Onda 2025!</span>
+                <span className="text-md lg:text-xl font-semibold font-clash-display text-white">¡Magdalena 2026!</span>
               </div>
               <div className="mb-12">
                 <h1 className="text-6xl lg:text-8xl text-white font-bold font-khand">
-                  LO QUE NECESITES PARA TUS FIESTAS
+                  TODO PARA LAS FIESTAS DE CASTELLÓN
                 </h1>
               </div>
 
               {/* Description */}
               <div className="mb-16 max-w-2xl lg:max-w-none">
                 <p className="text-base lg:text-xl text-gray-200 leading-relaxed tracking-wider font-clash-display">
-                  SOMOS GENTE DE ONDA <br />
-                  <span className="text-white font-semibold">NADIE MEJOR PARA QUE NO TE FALTE DE NADA</span>
+                  CONOCEMOS CASTELLÓN Y SUS TRADICIONES <br />
+                  <span className="text-white font-semibold">LA MAGDALENA MERECE LO MEJOR</span>
                 </p>
               </div>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 items-center lg:items-start justify-center lg:justify-start">
-                <Link href="/contacto">
+                <Link href="/solicitar-presupuesto">
                   <Button
                     size="md"
                     variant="default"
@@ -73,14 +73,16 @@ export function Hero() {
           {/* Right side - Poster image */}
           <div className="flex justify-center lg:justify-end mb-5">
             <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl">
-              <Image
-                src="/images/Cartel_Fira_d_Onda_2025.jpg"
-                alt="Cartel Feria d'Onda 2025"
-                width={600}
-                height={800}
-                className="object-contain border border-gray-300"
-                priority
-              />
+              <div className="relative aspect-[3/4] w-full">
+                <Image
+                  src="/images/cartel-magdalena-2026.jpg"
+                  alt="Cartel oficial Magdalena 2026 - Fira i Festes de la Magdalena, Castelló de la Plana"
+                  fill
+                  className="object-contain"
+                  priority
+                  quality={100}
+                />
+              </div>
             </div>
           </div>
         </div>

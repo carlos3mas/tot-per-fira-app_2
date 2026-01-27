@@ -4,14 +4,17 @@ import Button from "@/components/ui/retro-btn";
 import { CheckCircle, Send } from "lucide-react";
 import { type Presupuesto } from "@/types/presupuesto";
 
+import { Textarea } from "@/components/ui/textarea";
+
 interface ResumenStepProps {
   presupuesto: Presupuesto;
   onEnviar: () => void;
   puedeEnviar: boolean;
   isLoading?: boolean;
+  onUpdate: (data: Partial<Presupuesto>) => void;
 }
 
-export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoading = false }: ResumenStepProps) {
+export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoading = false, onUpdate }: ResumenStepProps) {
   const calcularTotal = () => {
     return presupuesto.objetosPedido.reduce((total, producto) => {
       return total + (producto.precio ? producto.precio * producto.unidades : 0);
@@ -158,6 +161,25 @@ export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoad
           </div>
         </>
       )}
+
+      {/* Comentarios Adicionales */}
+      <div className="border-b border-gray-300 bg-[var(--complementary-color-pink)]/10 p-4">
+        <h3 className="text-xl md:text-2xl font-bold font-khand text-[var(--secondary-color)]">
+          Comentarios Adicionales
+        </h3>
+      </div>
+      <div className="border-b border-gray-300 p-4">
+        <label htmlFor="comentarios" className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">
+          ¿Hay algo más que debamos tener en cuenta?
+        </label>
+        <Textarea
+          id="comentarios"
+          placeholder="Ej: Horario preferente de entrega, detalles sobre el acceso al local, etc."
+          value={presupuesto.comentarios || ""}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onUpdate({ comentarios: e.target.value })}
+          className="min-h-[100px] border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50 font-clash-display rounded-none focus:outline-none focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none transition-all p-3"
+        />
+      </div>
     </div>
   );
 } 

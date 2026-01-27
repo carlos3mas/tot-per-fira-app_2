@@ -236,6 +236,7 @@ export default function PresupuestoForm() {
             onEnviar={enviarPresupuesto}
             puedeEnviar={puedeEnviar() as boolean}
             isLoading={isPending}
+            onUpdate={actualizarPresupuesto}
           />
         );
       default:

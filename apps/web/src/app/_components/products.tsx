@@ -1,4 +1,4 @@
-import { Speaker, Refrigerator, type LucideIcon, Utensils, BrushCleaning, Barrel, GlassWater } from "lucide-react"
+import { Speaker, Refrigerator, type LucideIcon, Utensils, BrushCleaning, Barrel, GlassWater, Disc3, UtensilsCrossed, Drum, Guitar, Castle, Tent } from "lucide-react"
 import Button from "@/components/ui/retro-btn"
 import Link from "next/link"
 
@@ -19,6 +19,7 @@ export function Products() {
               bgColor="bg-lime-400"
               iconColor="text-[var(--primary-color)]"
               textColor="text-[var(--primary-color)]"
+              descriptionColor="text-white"
             />
             <ProductCard
               title="CONGELADORES"
@@ -27,6 +28,7 @@ export function Products() {
               bgColor="bg-pink-400"
               iconColor="text-[var(--complementary-color-yellow)]"
               textColor="text-[var(--complementary-color-yellow)]"
+              descriptionColor="text-white"
             />
             <ProductCard
               title="BEBIDAS"
@@ -35,6 +37,7 @@ export function Products() {
               bgColor="bg-teal-400"
               iconColor="text-[var(--secondary-color)]"
               textColor="text-[var(--secondary-color)]"
+              descriptionColor="text-white"
             />
             <ProductCard
               title="CERVEZA"
@@ -52,6 +55,7 @@ export function Products() {
               bgColor="bg-[var(--primary-color)]"
               iconColor="text-[var(--secondary-color)]"
               textColor="text-[var(--secondary-color)]"
+              descriptionColor="text-white"
             />
             <ProductCard
               title="PACKS DE MENAJE"
@@ -60,6 +64,61 @@ export function Products() {
               bgColor="bg-[var(--complementary-color-yellow)]"
               iconColor="text-[var(--primary-color)]"
               textColor="text-[var(--primary-color)]"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="DJ"
+              description="Servicio de DJ profesional para amenizar tu evento"
+              icon={Disc3}
+              bgColor="bg-purple-500"
+              iconColor="text-gray-900"
+              textColor="text-gray-900"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="CATERING"
+              description="Servicio de catering completo para tu evento"
+              icon={UtensilsCrossed}
+              bgColor="bg-orange-400"
+              iconColor="text-[var(--secondary-color)]"
+              textColor="text-[var(--secondary-color)]"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="CHARANGA"
+              description="Charanga en vivo para animar tus fiestas"
+              icon={Drum}
+              bgColor="bg-blue-900"
+              iconColor="text-yellow-300"
+              textColor="text-yellow-300"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="GRUPO DE MÚSICA"
+              description="Grupo de música en vivo tocando rumbas y flamenco"
+              icon={Guitar}
+              bgColor="bg-red-500"
+              iconColor="text-gray-900"
+              textColor="text-gray-900"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="HINCHABLES"
+              description="Alquiler de hinchables para eventos y fiestas infantiles"
+              icon={Castle}
+              bgColor="bg-yellow-400"
+              iconColor="text-[var(--primary-color)]"
+              textColor="text-[var(--primary-color)]"
+              descriptionColor="text-white"
+            />
+            <ProductCard
+              title="CARPAS Y CASETAS"
+              description="Alquiler de carpas y casetas de madera para eventos"
+              icon={Tent}
+              bgColor="bg-green-600"
+              iconColor="text-yellow-300"
+              textColor="text-yellow-300"
+              descriptionColor="text-white"
             />
           </div>
         </div>
@@ -118,7 +177,7 @@ function ProductCard({
   return (
     <div className={`${bgColor} p-8 text-center min-h-[350px] flex flex-col items-center justify-center`}>
       <Icon className={`w-30 h-30 mb-6 ${iconColor}`} />
-      <h2 className={`text-4xl md:text-4xl lg:text-6xl font-bold font-khand mb-4 ${textColor}`}>{title}</h2>
+      <h3 className={`text-4xl md:text-4xl lg:text-6xl font-bold font-khand mb-4 ${textColor}`}>{title}</h3>
       <p className={`text-md md:text-md lg:text-lg ${descriptionColor}`}>{description}</p>
     </div>
   )

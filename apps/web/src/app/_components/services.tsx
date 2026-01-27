@@ -42,8 +42,8 @@ function ServiceCard({
 }) {
   return (
     <div className="p-4 border-gray-300">
-      <h2 className={`text-2xl font-bold font-khand ${stepColor}`}>{step}.</h2>
-      <h2 className={`text-3xl md:text-5xl font-bold font-khand ${titleColor}`}>{title}</h2>
+      <span className={`text-2xl font-bold font-khand ${stepColor} block`}>{step}.</span>
+      <h3 className={`text-3xl md:text-5xl font-bold font-khand ${titleColor}`}>{title}</h3>
       <p className={descriptionColor}>{description}</p>
     </div>
   )

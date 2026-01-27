@@ -16,6 +16,7 @@ export async function createOrderInDB(orderData: {
   correoElectronico: string;
   numeroTelefono: string;
   segundoNumeroTelefono?: string;
+  comentarios?: string;
   objetosPedido: Array<{
     nombre: string;
     unidades: number;
@@ -25,7 +26,7 @@ export async function createOrderInDB(orderData: {
 }) {
   const orderId = generateId();
   const now = new Date();
-  
+
   // Calcular total estimado
   const totalEstimado = orderData.objetosPedido.reduce((total, item) => {
     return total + (item.precio || 0) * item.unidades;
@@ -42,6 +43,7 @@ export async function createOrderInDB(orderData: {
     segundoNumeroTelefono: orderData.segundoNumeroTelefono,
     estado: "pendiente",
     totalEstimado: totalEstimado > 0 ? totalEstimado : null,
+    comentarios: orderData.comentarios,
     fechaCreacion: now,
     fechaActualizacion: now,
   };
@@ -85,4 +87,51 @@ export async function getOrderByIdFromDB(orderId: string) {
     order: order[0],
     items
   };
-} 
+}
+
+export async function getAllOrdersFromDB() {
+  const allOrders = await db
+    .select()
+    .from(orders)
+    .orderBy(orders.fechaCreacion);
+
+  return allOrders;
+}
+
+export async function getAllOrdersWithItemsFromDB() {
+  const allOrders = await db
+    .select()
+    .from(orders)
+    .orderBy(orders.fechaCreacion);
+
+  const allItems = await db
+    .select()
+    .from(orderItems);
+
+  // Agrupar items por orderId
+  const itemsByOrderId = new Map<string, typeof allItems>();
+  allItems.forEach(item => {
+    const existing = itemsByOrderId.get(item.orderId) || [];
+    existing.push(item);
+    itemsByOrderId.set(item.orderId, existing);
+  });
+
+  return {
+    orders: allOrders,
+    itemsByOrderId
+  };
+}
+
+export async function updateOrderStatusInDB(orderId: string, newStatus: "pendiente" | "confirmado" | "en_proceso" | "completado" | "cancelado") {
+  const now = new Date();
+
+  await db
+    .update(orders)
+    .set({
+      estado: newStatus,
+      fechaActualizacion: now
+    })
+    .where(eq(orders.id, orderId));
+
+  return true;
+}

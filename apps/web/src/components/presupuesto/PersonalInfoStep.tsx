@@ -55,7 +55,7 @@ export default function PersonalInfoStep({ form, presupuesto, onUpdate }: Person
                   htmlFor={field.name}
                   className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg"
                 >
-                  ¿Eres una Peña? Indica su Nombre
+                  Nombre de la Organización, Peña o Grupo
                 </Label>
                 <Input
                   id={field.name}
@@ -66,7 +66,7 @@ export default function PersonalInfoStep({ form, presupuesto, onUpdate }: Person
                     field.handleChange(e.target.value);
                     onUpdate({ nombrePenya: e.target.value });
                   }}
-                  placeholder="Nombre de tu peña (opcional)"
+                  placeholder="Nombre de tu organización, peña o grupo (opcional)"
                   className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
                 />
                 {field.state.meta.errors.map((error: any) => (
