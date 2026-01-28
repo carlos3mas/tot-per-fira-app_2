@@ -4,6 +4,8 @@ import { Products } from "./_components/products"
 import { OurMission } from "./_components/our-mission"
 import { CTASection } from "./_components/cta-section"
 import FrequentQuestionts from "./_components/faqs"
+import { Testimonials } from "./_components/testimonials"
+
 
 export default function Home() {
   return (
@@ -17,6 +19,7 @@ export default function Home() {
         <Services />
         <OurMission />
         <Products />
+        <Testimonials />
         <CTASection />
         <FrequentQuestionts />
       </div>
