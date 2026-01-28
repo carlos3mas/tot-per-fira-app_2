@@ -24,7 +24,7 @@ export function ConfidenceSection() {
                 </span>
               </div>
               <NumberTicker
-                value={50}
+                value={21}
                 className="text-6xl md:text-8xl text-[var(--primary-color)] font-bold font-khand"
               />
               <span className="text-4xl md:text-6xl font-bold font-khand text-[var(--secondary-color)]">

@@ -1,5 +1,3 @@
-"use client"
-
 import { cn } from "@/lib/utils"
 import { Star } from "lucide-react"
 
@@ -9,9 +7,11 @@ interface Testimonial {
   content: string
   rating: number
   date: string
+  profilePhoto?: string
 }
 
-const testimonials: Testimonial[] = [
+// Datos de respaldo en caso de que la API falle
+const fallbackTestimonials: Testimonial[] = [
   {
     name: "Alba",
     role: "Reseña de Google",
@@ -123,7 +123,52 @@ function MarqueeRow({
   )
 }
 
-export function Testimonials() {
+async function fetchGoogleReviews(): Promise<Testimonial[]> {
+  try {
+    const apiKey = process.env.GOOGLE_PLACES_API_KEY
+    const placeId = process.env.GOOGLE_PLACE_ID
+
+    if (!apiKey || !placeId) {
+      console.warn('Google Places API credentials not found, using fallback reviews')
+      return fallbackTestimonials
+    }
+
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews,rating,user_ratings_total&key=${apiKey}&language=es`
+    
+    const response = await fetch(url, {
+      next: { revalidate: 3600 } // Cache por 1 hora
+    })
+
+    if (!response.ok) {
+      throw new Error(`Google API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    if (data.status !== 'OK') {
+      throw new Error(`Google API status: ${data.status}`)
+    }
+
+    // Transformar las reseñas al formato del componente
+    const reviews = data.result?.reviews?.map((review: any) => ({
+      name: review.author_name,
+      role: 'Reseña de Google',
+      content: review.text,
+      rating: review.rating,
+      date: review.relative_time_description,
+      profilePhoto: review.profile_photo_url
+    })) || []
+
+    return reviews.length > 0 ? reviews : fallbackTestimonials
+  } catch (error) {
+    console.error('Error fetching Google reviews, using fallback:', error)
+    return fallbackTestimonials
+  }
+}
+
+export async function Testimonials() {
+  const testimonials = await fetchGoogleReviews()
+  
   return (
     <section className="relative overflow-hidden border border-b-0 border-t-0 border-gray-300 container mx-auto">
       <div className="container mx-auto">
