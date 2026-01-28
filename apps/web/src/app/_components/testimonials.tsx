@@ -100,8 +100,9 @@ function MarqueeRow({
   reverse?: boolean
   speed?: number
 }) {
-  // Duplicate testimonials multiple times to ensure seamless infinite scroll
-  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials, ...testimonials]
+  // Duplicate testimonials exactly twice for seamless infinite scroll
+  // The animation will reset when the first set completes, creating a perfect loop
+  const duplicatedTestimonials = [...testimonials, ...testimonials]
   
   return (
     <div className="relative w-full overflow-hidden py-4">
