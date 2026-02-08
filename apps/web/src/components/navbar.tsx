@@ -24,13 +24,13 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <GlitchText className="text-[var(--primary-color)] font-khand font-bold text-2xl md:text-4xl" shadowColor1="var(--complementary-color-yellow)" shadowColor2="#00ffff">
+            <GlitchText className="text-[var(--primary-color)] font-khand font-bold text-2xl md:text-4xl whitespace-nowrap" shadowColor1="var(--complementary-color-yellow)" shadowColor2="#00ffff">
               TOT PER FIRA
             </GlitchText>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden xl:flex items-center space-x-8">
             {/* Navigation Links */}
             <div className="flex items-center space-x-6">
               {navigationLinks.map((link) => (
@@ -66,7 +66,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden flex items-center space-x-3">
+          <div className="xl:hidden flex items-center space-x-3">
             <Link href="/solicitar-presupuesto" className="block">
               <Button
                 size="md"
