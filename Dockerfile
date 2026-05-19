@@ -42,4 +42,4 @@ RUN pnpm build
 EXPOSE 3000
 
 # Run DB migrations then start the app
-CMD ["sh", "-c", "pnpm exec tsx src/lib/db/migrate.ts && pnpm start"]
+CMD ["sh", "-c", "node migrate.mjs && pnpm start"]
