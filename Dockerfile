@@ -28,7 +28,7 @@ ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL \
 COPY apps/web/package.json ./
 
 # Allow build scripts (needed for esbuild, sharp, etc.)
-RUN echo "dangerously-allow-all-builds=true" > .npmrc
+RUN printf "dangerouslyAllowAllBuilds: true\n" > pnpm-workspace.yaml
 
 # Install dependencies
 RUN pnpm install
