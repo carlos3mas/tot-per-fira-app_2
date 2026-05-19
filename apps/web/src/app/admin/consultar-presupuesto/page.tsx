@@ -2,7 +2,8 @@
 
 import React, { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, FileText, Calendar, User, Phone, Mail, Package, ArrowLeft, Home, LogOut, ArrowUpDown, Eye, Download } from "lucide-react";
+import { Search, FileText, Calendar, User, Phone, Mail, Package, ArrowLeft, Home, LogOut, ArrowUpDown, Eye, Download, List } from "lucide-react";
+import CalendarioPresupuestos from "@/components/admin/CalendarioPresupuestos";
 import Button from "@/components/ui/retro-btn";
 import { Input } from "@/components/ui/input";
 import { getOrderById, getAllOrders, getAllOrdersWithItems, updateOrderStatus } from "@/lib/actions/orders";
@@ -19,6 +20,7 @@ export default function ConsultarPresupuestoPage() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [view, setView] = useState<'list' | 'calendar'>('list');
   const [isPending, startTransition] = useTransition();
   const { data: session, isPending: isSessionLoading } = authClient.useSession();
 
@@ -317,6 +319,27 @@ export default function ConsultarPresupuestoPage() {
               <ArrowUpDown size={16} className="mr-2" />
               {sortOrder === 'desc' ? 'Más recientes' : 'Más antiguos'}
             </Button>
+            {/* Toggle vista */}
+            <div className="flex border-2 border-black shadow-[2px_2px_0px_0px_#000] overflow-hidden self-start">
+              <button
+                onClick={() => setView('list')}
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-clash-display font-bold transition-colors ${
+                  view === 'list' ? 'bg-[var(--primary-color)] text-white' : 'bg-white hover:bg-gray-50'
+                }`}
+              >
+                <List size={16} />
+                Lista
+              </button>
+              <button
+                onClick={() => setView('calendar')}
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-clash-display font-bold border-l-2 border-black transition-colors ${
+                  view === 'calendar' ? 'bg-[var(--primary-color)] text-white' : 'bg-white hover:bg-gray-50'
+                }`}
+              >
+                <Calendar size={16} />
+                Calendario
+              </button>
+            </div>
           </div>
           {selectedOrder && (
             <Button
@@ -330,8 +353,18 @@ export default function ConsultarPresupuestoPage() {
           )}
         </div>
 
+        {/* Vista Calendario */}
+        {!selectedOrder && view === 'calendar' && (
+          <div className="mb-6">
+            <CalendarioPresupuestos
+              orders={filteredOrders}
+              onViewOrder={handleViewOrder}
+            />
+          </div>
+        )}
+
         {/* Listado de Presupuestos */}
-        {!selectedOrder && (
+        {!selectedOrder && view === 'list' && (
           <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] p-6 mb-6">
             {loading ? (
               <div className="text-center py-8">
