@@ -33,6 +33,9 @@ RUN printf "dangerouslyAllowAllBuilds: true\n" > pnpm-workspace.yaml
 # Install dependencies
 RUN pnpm install
 
+# Cache bust — update this value to force a fresh build
+ARG CACHEBUST=20260519-1
+
 # Copy source
 COPY apps/web ./
 
