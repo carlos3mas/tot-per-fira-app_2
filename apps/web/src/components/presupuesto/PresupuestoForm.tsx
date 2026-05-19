@@ -62,6 +62,10 @@ export default function PresupuestoForm() {
     objetosPedido: [],
     nombrePenya: "",
     segundoNumeroTelefono: "",
+    localizacionEvento: "",
+    fechaInicio: "",
+    fechaFin: "",
+    tipoEvento: "",
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPackInfoOpen, setIsPackInfoOpen] = useState(false);
@@ -120,7 +124,9 @@ export default function PresupuestoForm() {
       return presupuesto.nombreCompleto.trim() !== '' &&
              presupuesto.direccion.trim() !== '' &&
              presupuesto.correoElectronico.trim() !== '' &&
-             presupuesto.numeroTelefono.trim() !== '';
+             presupuesto.numeroTelefono.trim() !== '' &&
+             (presupuesto.localizacionEvento || '').trim() !== '' &&
+             (presupuesto.fechaInicio || '').trim() !== '';
     }
     // Para otros pasos, siempre se puede avanzar
     return true;

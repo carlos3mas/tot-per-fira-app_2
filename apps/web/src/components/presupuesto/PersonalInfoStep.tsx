@@ -213,6 +213,76 @@ export default function PersonalInfoStep({ form, presupuesto, onUpdate }: Person
             )}
           </form.Field>
         </div>
+
+        {/* Localización del evento */}
+        <div className="md:col-span-2">
+          <div className="space-y-3">
+            <Label htmlFor="localizacionEvento" className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg">
+              Localización del Evento o Fiesta *
+            </Label>
+            <Input
+              id="localizacionEvento"
+              name="localizacionEvento"
+              value={presupuesto.localizacionEvento || ""}
+              onChange={(e) => onUpdate({ localizacionEvento: e.target.value })}
+              placeholder="Ej: Calle Mayor 12, Onda — Local de la peña, Nave industrial..."
+              className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
+            />
+          </div>
+        </div>
+
+        {/* Tipo de evento */}
+        <div className="md:col-span-2">
+          <div className="space-y-3">
+            <Label htmlFor="tipoEvento" className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg">
+              Tipo de Evento
+            </Label>
+            <Input
+              id="tipoEvento"
+              name="tipoEvento"
+              value={presupuesto.tipoEvento || ""}
+              onChange={(e) => onUpdate({ tipoEvento: e.target.value })}
+              placeholder="Ej: Fiestas de la peña, Boda, Cumpleaños, Evento corporativo..."
+              className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
+            />
+            <p className="text-xs text-gray-500 font-clash-display">Opcional — describe brevemente el tipo de evento</p>
+          </div>
+        </div>
+
+        {/* Fechas */}
+        <div>
+          <div className="space-y-3">
+            <Label htmlFor="fechaInicio" className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg">
+              Fecha de Inicio *
+            </Label>
+            <Input
+              id="fechaInicio"
+              name="fechaInicio"
+              type="date"
+              value={presupuesto.fechaInicio || ""}
+              onChange={(e) => onUpdate({ fechaInicio: e.target.value })}
+              className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="space-y-3">
+            <Label htmlFor="fechaFin" className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg">
+              Fecha de Final
+            </Label>
+            <Input
+              id="fechaFin"
+              name="fechaFin"
+              type="date"
+              value={presupuesto.fechaFin || ""}
+              min={presupuesto.fechaInicio || undefined}
+              onChange={(e) => onUpdate({ fechaFin: e.target.value })}
+              className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
+            />
+            <p className="text-xs text-gray-500 font-clash-display">Opcional — si el evento dura varios días</p>
+          </div>
+        </div>
       </div>
     </div>
   );
