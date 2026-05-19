@@ -17,6 +17,9 @@ export async function createOrderInDB(orderData: {
   numeroTelefono: string;
   segundoNumeroTelefono?: string;
   comentarios?: string;
+  localizacionEvento?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
   objetosPedido: Array<{
     nombre: string;
     unidades: number;
@@ -44,6 +47,9 @@ export async function createOrderInDB(orderData: {
     estado: "pendiente",
     totalEstimado: totalEstimado > 0 ? totalEstimado : null,
     comentarios: orderData.comentarios,
+    localizacionEvento: orderData.localizacionEvento,
+    fechaInicio: orderData.fechaInicio,
+    fechaFin: orderData.fechaFin,
     fechaCreacion: now,
     fechaActualizacion: now,
   };

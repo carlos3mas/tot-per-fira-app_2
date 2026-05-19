@@ -40,4 +40,4 @@ COPY apps/web ./
 RUN pnpm build
 
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["sh", "-c", "npx tsx src/lib/db/migrate.ts && pnpm start"]

@@ -8,6 +8,13 @@
       "when": 1757001109346,
       "tag": "0000_sleepy_daimon_hellstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1779191979241,
+      "tag": "0001_vengeful_triton",
+      "breakpoints": true
     }
   ]
 }

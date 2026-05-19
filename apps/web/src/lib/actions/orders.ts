@@ -13,6 +13,9 @@ const createOrderSchema = z.object({
   segundoNumeroTelefono: z.string().optional(),
   nombrePenya: z.string().optional(),
   comentarios: z.string().optional(),
+  localizacionEvento: z.string().optional(),
+  fechaInicio: z.string().optional(),
+  fechaFin: z.string().optional(),
   objetosPedido: z.array(z.object({
     nombre: z.string(),
     unidades: z.number().min(1),

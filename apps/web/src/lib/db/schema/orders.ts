@@ -16,6 +16,9 @@ export const orders = sqliteTable("orders", {
   fechaActualizacion: integer("fecha_actualizacion", { mode: "timestamp" }).notNull(),
   comentarios: text("comentarios"),
   notas: text("notas"),
+  localizacionEvento: text("localizacion_evento"),
+  fechaInicio: text("fecha_inicio"),
+  fechaFin: text("fecha_fin"),
 });
 
 export const orderItems = sqliteTable("order_items", {
