@@ -98,33 +98,6 @@ export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoad
               <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">{presupuesto.direccion}</p>
             </div>
           </div>
-
-          <div className="md:col-span-2">
-            <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Localización del Evento</span>
-            <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
-              <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">{presupuesto.localizacionEvento}</p>
-            </div>
-          </div>
-
-          <div>
-            <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Fecha de Inicio</span>
-            <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
-              <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">
-                {presupuesto.fechaInicio ? new Date(presupuesto.fechaInicio + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'}
-              </p>
-            </div>
-          </div>
-
-          {presupuesto.fechaFin && (
-            <div>
-              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Fecha de Final</span>
-              <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
-                <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">
-                  {new Date(presupuesto.fechaFin + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

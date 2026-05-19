@@ -27,9 +27,6 @@ ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL \
 # Copy package files (optimiza cache)
 COPY apps/web/package.json ./
 
-# Allow build scripts (needed for esbuild, sharp, etc.)
-RUN printf "dangerouslyAllowAllBuilds: true\n" > pnpm-workspace.yaml
-
 # Install dependencies
 RUN pnpm install
 
@@ -40,4 +37,4 @@ COPY apps/web ./
 RUN pnpm build
 
 EXPOSE 3000
-CMD ["sh", "-c", "npx tsx src/lib/db/migrate.ts && pnpm start"]
+CMD ["pnpm", "start"]

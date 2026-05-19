@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `tipo_evento` text;
