@@ -27,14 +27,19 @@ ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL \
 # Copy package files (optimiza cache)
 COPY apps/web/package.json ./
 
+# Allow pnpm build scripts (esbuild, sharp, etc.) — required for pnpm v10+
+RUN printf "dangerouslyAllowAllBuilds: true\n" > pnpm-workspace.yaml
+
 # Install dependencies
 RUN pnpm install
 
 # Copy source
 COPY apps/web ./
 
-# Build the web app (usa las vars anteriores)
+# Build the web app
 RUN pnpm build
 
 EXPOSE 3000
-CMD ["pnpm", "start"]
+
+# Run DB migrations then start the app
+CMD ["sh", "-c", "npx tsx src/lib/db/migrate.ts && pnpm start"]
