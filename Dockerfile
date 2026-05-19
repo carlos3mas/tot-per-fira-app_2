@@ -27,6 +27,9 @@ ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL \
 # Copy package files (optimiza cache)
 COPY apps/web/package.json ./
 
+# Allow build scripts (needed for esbuild, sharp, etc.)
+RUN echo "dangerously-allow-all-builds=true" > .npmrc
+
 # Install dependencies
 RUN pnpm install
 
