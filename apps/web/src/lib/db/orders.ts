@@ -17,6 +17,10 @@ export async function createOrderInDB(orderData: {
   numeroTelefono: string;
   segundoNumeroTelefono?: string;
   comentarios?: string;
+  localizacionEvento?: string;
+  tipoEvento?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
   objetosPedido: Array<{
     nombre: string;
     unidades: number;
@@ -44,6 +48,10 @@ export async function createOrderInDB(orderData: {
     estado: "pendiente",
     totalEstimado: totalEstimado > 0 ? totalEstimado : null,
     comentarios: orderData.comentarios,
+    localizacionEvento: orderData.localizacionEvento || null,
+    tipoEvento: orderData.tipoEvento || null,
+    fechaInicio: orderData.fechaInicio || null,
+    fechaFin: orderData.fechaFin || null,
     fechaCreacion: now,
     fechaActualizacion: now,
   };
@@ -120,6 +128,20 @@ export async function getAllOrdersWithItemsFromDB() {
     orders: allOrders,
     itemsByOrderId
   };
+}
+
+export async function updateOrderDatesInDB(orderId: string, fechaInicio: string | null, fechaFin: string | null) {
+  const now = new Date();
+  await db
+    .update(orders)
+    .set({ fechaInicio, fechaFin, fechaActualizacion: now })
+    .where(eq(orders.id, orderId));
+  return true;
+}
+
+export async function deleteOrderFromDB(orderId: string) {
+  await db.delete(orders).where(eq(orders.id, orderId));
+  return true;
 }
 
 export async function updateOrderStatusInDB(orderId: string, newStatus: "pendiente" | "confirmado" | "en_proceso" | "completado" | "cancelado") {

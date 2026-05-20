@@ -14,4 +14,8 @@ export interface Presupuesto {
   nombrePenya?: string;
   segundoNumeroTelefono?: string;
   comentarios?: string;
+  localizacionEvento?: string;
+  tipoEvento?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
 } 

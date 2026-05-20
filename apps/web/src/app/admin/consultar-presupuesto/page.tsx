@@ -2,11 +2,11 @@
 
 import React, { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, FileText, Calendar, User, Phone, Mail, Package, ArrowLeft, Home, LogOut, ArrowUpDown, Eye, Download, List } from "lucide-react";
+import { Search, FileText, Calendar, User, Phone, Mail, Package, ArrowLeft, Home, LogOut, ArrowUpDown, Eye, Download, List, Trash2 } from "lucide-react";
 import CalendarioPresupuestos from "@/components/admin/CalendarioPresupuestos";
 import Button from "@/components/ui/retro-btn";
 import { Input } from "@/components/ui/input";
-import { getOrderById, getAllOrders, getAllOrdersWithItems, updateOrderStatus } from "@/lib/actions/orders";
+import { getOrderById, getAllOrders, getAllOrdersWithItems, updateOrderStatus, deleteOrder, updateOrderDates } from "@/lib/actions/orders";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import type { Session } from "@/types/auth";
@@ -20,7 +20,11 @@ export default function ConsultarPresupuestoPage() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [editFechaInicio, setEditFechaInicio] = useState("");
+  const [editFechaFin, setEditFechaFin] = useState("");
   const [view, setView] = useState<'list' | 'calendar'>('list');
+  const [filtroEstado, setFiltroEstado] = useState<string>("todos");
+  const [filtroTipoEvento, setFiltroTipoEvento] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const { data: session, isPending: isSessionLoading } = authClient.useSession();
 
@@ -35,9 +39,8 @@ export default function ConsultarPresupuestoPage() {
   useEffect(() => {
     let filtered = allOrders;
 
-    // Filtrar por búsqueda
     if (searchTerm.trim()) {
-      filtered = filtered.filter(order => 
+      filtered = filtered.filter(order =>
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.correoElectronico.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,7 +48,16 @@ export default function ConsultarPresupuestoPage() {
       );
     }
 
-    // Ordenar por fecha
+    if (filtroEstado !== "todos") {
+      filtered = filtered.filter(order => order.estado === filtroEstado);
+    }
+
+    if (filtroTipoEvento.trim()) {
+      filtered = filtered.filter(order =>
+        (order.tipoEvento || "").toLowerCase().includes(filtroTipoEvento.toLowerCase())
+      );
+    }
+
     filtered = [...filtered].sort((a, b) => {
       const dateA = new Date(a.fechaCreacion).getTime();
       const dateB = new Date(b.fechaCreacion).getTime();
@@ -53,7 +65,7 @@ export default function ConsultarPresupuestoPage() {
     });
 
     setFilteredOrders(filtered);
-  }, [searchTerm, allOrders, sortOrder]);
+  }, [searchTerm, allOrders, sortOrder, filtroEstado, filtroTipoEvento]);
 
   // Verificar autenticación y rol
   React.useEffect(() => {
@@ -123,12 +135,57 @@ export default function ConsultarPresupuestoPage() {
         const result = await getOrderById(orderId);
         if (result.success) {
           setSelectedOrder(result.data);
+          setEditFechaInicio(result.data?.order?.fechaInicio || "");
+          setEditFechaFin(result.data?.order?.fechaFin || "");
         } else {
           toast.error(result.error || "Presupuesto no encontrado");
         }
       } catch (error) {
         console.error("Error buscando presupuesto:", error);
         toast.error("Error al buscar el presupuesto");
+      }
+    });
+  };
+
+  const handleUpdateDates = () => {
+    startTransition(async () => {
+      try {
+        const result = await updateOrderDates(
+          selectedOrder.order.id,
+          editFechaInicio || null,
+          editFechaFin || null
+        );
+        if (result.success) {
+          toast.success("Fechas actualizadas correctamente");
+          setSelectedOrder((prev: any) => ({
+            ...prev,
+            order: { ...prev.order, fechaInicio: editFechaInicio || null, fechaFin: editFechaFin || null }
+          }));
+          await loadAllOrders();
+        } else {
+          toast.error(result.error || "Error al actualizar las fechas");
+        }
+      } catch (error) {
+        console.error("Error actualizando fechas:", error);
+        toast.error("Error al actualizar las fechas");
+      }
+    });
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    startTransition(async () => {
+      try {
+        const result = await deleteOrder(orderId);
+        if (result.success) {
+          toast.success("Pedido eliminado correctamente");
+          setSelectedOrder(null);
+          await loadAllOrders();
+        } else {
+          toast.error(result.error || "Error al eliminar el pedido");
+        }
+      } catch (error) {
+        console.error("Error eliminando pedido:", error);
+        toast.error("Error al eliminar el pedido");
       }
     });
   };
@@ -341,11 +398,48 @@ export default function ConsultarPresupuestoPage() {
               </button>
             </div>
           </div>
+          {/* Filtros de estado y tipo de evento */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1">
+              <select
+                value={filtroEstado}
+                onChange={e => setFiltroEstado(e.target.value)}
+                className="w-full h-10 border-2 border-gray-300 shadow-[2px_2px_0px_0px_#000] font-clash-display px-3 text-sm rounded-none bg-white"
+                disabled={loading}
+              >
+                <option value="todos">Todos los estados</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmado">Confirmado</option>
+                <option value="en_proceso">En Proceso</option>
+                <option value="completado">Completado</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div className="flex-1">
+              <Input
+                placeholder="Filtrar por tipo de evento..."
+                value={filtroTipoEvento}
+                onChange={e => setFiltroTipoEvento(e.target.value)}
+                className="border-2 border-gray-300 rounded-none shadow-[2px_2px_0px_0px_#000]"
+                disabled={loading}
+              />
+            </div>
+            {(filtroEstado !== "todos" || filtroTipoEvento) && (
+              <button
+                onClick={() => { setFiltroEstado("todos"); setFiltroTipoEvento(""); }}
+                className="text-sm font-clash-display text-gray-500 hover:text-red-600 border border-gray-300 px-3 py-2 whitespace-nowrap transition-colors"
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+
           {selectedOrder && (
             <Button
               onClick={() => setSelectedOrder(null)}
               variant="outline"
               size="sm"
+              className="mt-3"
             >
               <ArrowLeft size={16} className="mr-2" />
               Volver al listado
@@ -420,13 +514,16 @@ export default function ConsultarPresupuestoPage() {
                           </div>
                         </td>
                         <td className="py-3 px-2">
-                          <span className="text-sm font-clash-display text-gray-600">
-                            {new Date(order.fechaCreacion).toLocaleDateString('es-ES', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric'
-                            })}
-                          </span>
+                          <div>
+                            {order.fechaInicio && (
+                              <span className="block text-sm font-bold font-clash-display text-amber-700">
+                                📅 {new Date(order.fechaInicio + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                              </span>
+                            )}
+                            <span className="text-xs font-clash-display text-gray-400">
+                              Pedido: {new Date(order.fechaCreacion).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                            </span>
+                          </div>
                         </td>
                         <td className="py-3 px-2 text-center">
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-clash-display border ${getEstadoColor(order.estado)}`}>
@@ -443,14 +540,28 @@ export default function ConsultarPresupuestoPage() {
                           )}
                         </td>
                         <td className="py-3 px-2 text-center">
-                          <Button
-                            onClick={() => handleViewOrder(order.id)}
-                            variant="default"
-                            size="sm"
-                          >
-                            <Eye size={14} className="mr-1" />
-                            Ver
-                          </Button>
+                          <div className="flex items-center justify-center gap-2">
+                            <Button
+                              onClick={() => handleViewOrder(order.id)}
+                              variant="default"
+                              size="sm"
+                            >
+                              <Eye size={14} className="mr-1" />
+                              Ver
+                            </Button>
+                            <button
+                              onClick={() => {
+                                if (confirm(`¿Eliminar el pedido de ${order.nombreCompleto}? Esta acción no se puede deshacer.`)) {
+                                  handleDeleteOrder(order.id);
+                                }
+                              }}
+                              disabled={isPending}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 border border-red-200 transition-colors disabled:opacity-50"
+                              title="Eliminar pedido"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -486,15 +597,28 @@ export default function ConsultarPresupuestoPage() {
                       <option value="cancelado">Cancelado</option>
                     </select>
                   </div>
-                  <Button
-                    onClick={handleExportSingleOrder}
-                    variant="default"
-                    size="sm"
-                    className="mt-6"
-                  >
-                    <Download size={14} className="mr-2" />
-                    Descargar Excel
-                  </Button>
+                  <div className="flex gap-2 mt-6">
+                    <Button
+                      onClick={handleExportSingleOrder}
+                      variant="default"
+                      size="sm"
+                    >
+                      <Download size={14} className="mr-2" />
+                      Descargar Excel
+                    </Button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`¿Eliminar el pedido de ${selectedOrder.order.nombreCompleto}? Esta acción no se puede deshacer.`)) {
+                          handleDeleteOrder(selectedOrder.order.id);
+                        }
+                      }}
+                      disabled={isPending}
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-clash-display font-medium text-red-600 bg-white border-2 border-red-500 shadow-[2px_2px_0px_0px_#ef4444] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                    >
+                      <Trash2 size={14} />
+                      Eliminar
+                    </button>
+                  </div>
                 </div>
               </div>
               
@@ -502,25 +626,62 @@ export default function ConsultarPresupuestoPage() {
                 <div className="space-y-3">
                   <div className="flex items-center text-gray-700">
                     <User size={20} className="mr-2 text-[var(--primary-color)]" />
-                    <span className="font-clash-display">{selectedOrder.order.nombreCompleto}</span>
+                    <div>
+                      <p className="font-clash-display font-bold">{selectedOrder.order.nombreCompleto}</p>
+                      {selectedOrder.order.nombrePenya && (
+                        <p className="font-clash-display text-sm text-gray-500">{selectedOrder.order.nombrePenya}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center text-gray-700">
                     <Mail size={20} className="mr-2 text-[var(--primary-color)]" />
                     <span className="font-clash-display">{selectedOrder.order.correoElectronico}</span>
                   </div>
-                  <div className="flex items-center text-gray-700">
-                    <Phone size={20} className="mr-2 text-[var(--primary-color)]" />
-                    <span className="font-clash-display">{selectedOrder.order.numeroTelefono}</span>
+                  <div className="flex items-start text-gray-700">
+                    <Phone size={20} className="mr-2 text-[var(--primary-color)] flex-shrink-0" />
+                    <div>
+                      <p className="font-clash-display">{selectedOrder.order.numeroTelefono}</p>
+                      {selectedOrder.order.segundoNumeroTelefono && (
+                        <p className="font-clash-display text-sm text-gray-500">{selectedOrder.order.segundoNumeroTelefono}</p>
+                      )}
+                    </div>
                   </div>
+                  {selectedOrder.order.direccion && selectedOrder.order.direccion !== 'sin_direccion' && (
+                    <div className="flex items-start text-gray-700">
+                      <Package size={20} className="mr-2 text-[var(--primary-color)] flex-shrink-0 mt-0.5" />
+                      <span className="font-clash-display text-sm">{selectedOrder.order.direccion}</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex items-center text-gray-700">
                     <Calendar size={20} className="mr-2 text-[var(--primary-color)]" />
-                    <span className="font-clash-display">
-                      {formatDate(selectedOrder.order.fechaCreacion)}
+                    <span className="font-clash-display text-sm text-gray-500">
+                      Pedido: {formatDate(selectedOrder.order.fechaCreacion)}
                     </span>
                   </div>
+                  {selectedOrder.order.fechaInicio && (
+                    <div className="flex items-center bg-amber-50 border-2 border-amber-400 px-3 py-2">
+                      <Calendar size={20} className="mr-2 text-amber-600 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-clash-display text-amber-700 font-bold uppercase tracking-wide">Fecha del Evento</p>
+                        <p className="font-clash-display font-bold text-amber-900">
+                          {new Date(selectedOrder.order.fechaInicio + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
+                          {selectedOrder.order.fechaFin && ` → ${new Date(selectedOrder.order.fechaFin + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {selectedOrder.order.tipoEvento && (
+                    <div className="flex items-center text-gray-700">
+                      <FileText size={20} className="mr-2 text-[var(--primary-color)]" />
+                      <div>
+                        <p className="text-xs font-clash-display text-gray-500 uppercase tracking-wide">Tipo de evento</p>
+                        <p className="font-clash-display font-bold">{selectedOrder.order.tipoEvento}</p>
+                      </div>
+                    </div>
+                  )}
                   {selectedOrder.order.totalEstimado && (
                     <div className="bg-[var(--complementary-color-pink)]/10 border-2 border-[var(--primary-color)] p-3 rounded">
                       <p className="text-sm font-clash-display text-gray-600 mb-1">Total Estimado:</p>
@@ -530,6 +691,43 @@ export default function ConsultarPresupuestoPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Fechas del evento — editable */}
+              <div className="mt-6 border-2 border-black shadow-[2px_2px_0px_0px_#000] p-4">
+                <h4 className="font-bold font-khand text-[var(--secondary-color)] text-lg mb-3 flex items-center gap-2">
+                  <Calendar size={18} className="text-[var(--primary-color)]" />
+                  Fechas del Evento
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-clash-display text-gray-600 block mb-1">Fecha de Inicio *</label>
+                    <input
+                      type="date"
+                      value={editFechaInicio}
+                      onChange={e => setEditFechaInicio(e.target.value)}
+                      className="w-full h-10 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display px-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-clash-display text-gray-600 block mb-1">Fecha de Fin <span className="text-gray-400">(opcional)</span></label>
+                    <input
+                      type="date"
+                      value={editFechaFin}
+                      min={editFechaInicio || undefined}
+                      onChange={e => setEditFechaFin(e.target.value)}
+                      className="w-full h-10 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display px-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-sm"
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={handleUpdateDates}
+                  disabled={isPending || !editFechaInicio}
+                  className="mt-3 flex items-center gap-2 px-4 py-2 text-sm font-clash-display font-bold bg-[var(--primary-color)] text-[var(--secondary-color)] border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                >
+                  <Calendar size={14} />
+                  Guardar fechas
+                </button>
               </div>
 
               {/* Comentarios Adicionales */}

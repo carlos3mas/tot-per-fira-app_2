@@ -7,11 +7,12 @@ interface Order {
   id: string;
   nombreCompleto: string;
   nombrePenya?: string;
-  fechaInicio?: string;
-  fechaFin?: string;
-  tipoEvento?: string;
-  localizacionEvento?: string;
+  fechaInicio?: string | null;
+  fechaFin?: string | null;
+  tipoEvento?: string | null;
+  localizacionEvento?: string | null;
   estado: string;
+  fechaCreacion?: Date | string | number | null;
 }
 
 interface CalendarioPresupuestosProps {
@@ -63,13 +64,17 @@ export default function CalendarioPresupuestos({ orders, onViewOrder }: Calendar
     else setMonth(m => m + 1);
   };
 
-  // Construir mapa día -> órdenes
+  const ordersConFecha = useMemo(() => orders.filter(o => o.fechaInicio), [orders]);
+  const ordersSinFecha = useMemo(() => orders.filter(o => !o.fechaInicio), [orders]);
+
+  // Construir mapa día -> órdenes (solo pedidos con fechaInicio)
   const ordersByDay = useMemo(() => {
     const map: Record<string, Order[]> = {};
-    orders.forEach(order => {
-      if (!order.fechaInicio) return;
-      const start = new Date(order.fechaInicio + "T00:00:00");
-      const end = order.fechaFin ? new Date(order.fechaFin + "T00:00:00") : start;
+    ordersConFecha.forEach(order => {
+      const start = new Date(order.fechaInicio! + "T00:00:00");
+      const rawEnd = order.fechaFin ? new Date(order.fechaFin + "T00:00:00") : start;
+      // si fechaFin es anterior a fechaInicio (año mal escrito, etc.) se ignora
+      const end = rawEnd >= start ? rawEnd : start;
       const cur = new Date(start);
       while (cur <= end) {
         const key = toLocalDateStr(cur);
@@ -79,7 +84,7 @@ export default function CalendarioPresupuestos({ orders, onViewOrder }: Calendar
       }
     });
     return map;
-  }, [orders]);
+  }, [ordersConFecha]);
 
   // Días del mes en una cuadrícula lun-dom
   const days = useMemo(() => {
@@ -135,6 +140,13 @@ export default function CalendarioPresupuestos({ orders, onViewOrder }: Calendar
           </div>
         ))}
       </div>
+
+      {/* Aviso pedidos sin fecha de evento */}
+      {ordersSinFecha.length > 0 && (
+        <div className="mb-4 border border-amber-300 bg-amber-50 p-3 text-sm font-clash-display text-amber-800">
+          <span className="font-bold">{ordersSinFecha.length} pedido{ordersSinFecha.length !== 1 ? 's' : ''}</span> sin fecha de evento — ábrelos desde la lista y asigna las fechas para que aparezcan aquí.
+        </div>
+      )}
 
       {/* Grid días semana */}
       <div className="grid grid-cols-7 mb-1">
@@ -199,6 +211,14 @@ export default function CalendarioPresupuestos({ orders, onViewOrder }: Calendar
         })}
       </div>
 
+      {/* Mensaje si no hay pedidos en absoluto */}
+      {orders.length === 0 && (
+        <div className="mt-4 text-center py-6 border border-dashed border-gray-300">
+          <CalendarDays size={32} className="mx-auto text-gray-300 mb-2" />
+          <p className="text-sm font-clash-display text-gray-500">No hay pedidos que mostrar.</p>
+        </div>
+      )}
+
       {/* Panel detalle día seleccionado */}
       {selectedDay && (
         <div className="mt-4 border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4">
@@ -236,9 +256,6 @@ export default function CalendarioPresupuestos({ orders, onViewOrder }: Calendar
                       )}
                       {order.tipoEvento && (
                         <p className="text-xs text-[var(--primary-color)] font-clash-display">{order.tipoEvento}</p>
-                      )}
-                      {order.localizacionEvento && (
-                        <p className="text-xs text-gray-500 font-clash-display truncate">📍 {order.localizacionEvento}</p>
                       )}
                       <div className="flex items-center gap-2 mt-1">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-clash-display ${

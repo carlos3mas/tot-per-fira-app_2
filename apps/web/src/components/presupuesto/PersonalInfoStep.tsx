@@ -214,23 +214,6 @@ export default function PersonalInfoStep({ form, presupuesto, onUpdate }: Person
           </form.Field>
         </div>
 
-        {/* Localización del evento */}
-        <div className="md:col-span-2">
-          <div className="space-y-3">
-            <Label htmlFor="localizacionEvento" className="text-[var(--secondary-color)] font-clash-display font-bold text-base md:text-lg">
-              Localización del Evento o Fiesta *
-            </Label>
-            <Input
-              id="localizacionEvento"
-              name="localizacionEvento"
-              value={presupuesto.localizacionEvento || ""}
-              onChange={(e) => onUpdate({ localizacionEvento: e.target.value })}
-              placeholder="Ej: Calle Mayor 12, Onda — Local de la peña, Nave industrial..."
-              className="h-12 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] font-clash-display p-3 focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all rounded-none text-base"
-            />
-          </div>
-        </div>
-
         {/* Tipo de evento */}
         <div className="md:col-span-2">
           <div className="space-y-3">
@@ -284,6 +267,7 @@ export default function PersonalInfoStep({ form, presupuesto, onUpdate }: Person
           </div>
         </div>
       </div>
+
     </div>
   );
 }

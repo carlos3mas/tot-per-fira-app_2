@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { createOrderInDB, getOrderByIdFromDB, getAllOrdersFromDB, getAllOrdersWithItemsFromDB, updateOrderStatusInDB } from "@/lib/db/orders";
+import { createOrderInDB, getOrderByIdFromDB, getAllOrdersFromDB, getAllOrdersWithItemsFromDB, updateOrderStatusInDB, deleteOrderFromDB, updateOrderDatesInDB } from "@/lib/db/orders";
 import { type Presupuesto } from "@/types/presupuesto";
 import { sendWhatsAppNotification } from "@/lib/services/whatsapp-notification";
 
@@ -13,6 +13,10 @@ const createOrderSchema = z.object({
   segundoNumeroTelefono: z.string().optional(),
   nombrePenya: z.string().optional(),
   comentarios: z.string().optional(),
+  localizacionEvento: z.string().optional(),
+  tipoEvento: z.string().optional(),
+  fechaInicio: z.string().optional(),
+  fechaFin: z.string().optional(),
   objetosPedido: z.array(z.object({
     nombre: z.string(),
     unidades: z.number().min(1),
@@ -122,6 +126,26 @@ export async function getAllOrdersWithItems() {
       success: false,
       error: "Error al obtener los pedidos con items"
     };
+  }
+}
+
+export async function updateOrderDates(orderId: string, fechaInicio: string | null, fechaFin: string | null) {
+  try {
+    await updateOrderDatesInDB(orderId, fechaInicio, fechaFin);
+    return { success: true, message: "Fechas actualizadas correctamente" };
+  } catch (error) {
+    console.error("Error updating order dates:", error);
+    return { success: false, error: "Error al actualizar las fechas" };
+  }
+}
+
+export async function deleteOrder(orderId: string) {
+  try {
+    await deleteOrderFromDB(orderId);
+    return { success: true, message: "Pedido eliminado correctamente" };
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    return { success: false, error: "Error al eliminar el pedido" };
   }
 }
 

@@ -66,6 +66,7 @@ export default function PresupuestoForm() {
     fechaInicio: "",
     fechaFin: "",
     tipoEvento: "",
+    
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPackInfoOpen, setIsPackInfoOpen] = useState(false);
@@ -125,7 +126,6 @@ export default function PresupuestoForm() {
              presupuesto.direccion.trim() !== '' &&
              presupuesto.correoElectronico.trim() !== '' &&
              presupuesto.numeroTelefono.trim() !== '' &&
-             (presupuesto.localizacionEvento || '').trim() !== '' &&
              (presupuesto.fechaInicio || '').trim() !== '';
     }
     // Para otros pasos, siempre se puede avanzar
@@ -148,7 +148,8 @@ export default function PresupuestoForm() {
     const infoCompleta = presupuesto.nombreCompleto && 
                         presupuesto.direccion &&
                         presupuesto.correoElectronico && 
-                        presupuesto.numeroTelefono;
+                        presupuesto.numeroTelefono &&
+                        presupuesto.fechaInicio;
     const tieneProductos = presupuesto.objetosPedido.length > 0;
     
     return infoCompleta && tieneProductos;

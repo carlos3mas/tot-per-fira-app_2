@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/retro-btn";
-import { CheckCircle, Send } from "lucide-react";
+import { CalendarIcon, CheckCircle, Send } from "lucide-react";
 import { type Presupuesto } from "@/types/presupuesto";
 
 import { Textarea } from "@/components/ui/textarea";
@@ -99,15 +99,6 @@ export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoad
             </div>
           </div>
 
-          {presupuesto.localizacionEvento && (
-            <div className="md:col-span-2">
-              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Localización del Evento</span>
-              <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
-                <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">{presupuesto.localizacionEvento}</p>
-              </div>
-            </div>
-          )}
-
           {presupuesto.tipoEvento && (
             <div>
               <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Tipo de Evento</span>
@@ -119,10 +110,13 @@ export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoad
 
           {presupuesto.fechaInicio && (
             <div>
-              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Fecha de Inicio</span>
-              <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
+              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2 flex items-center gap-1">
+                <CalendarIcon size={14} />
+                Fecha de Inicio
+              </span>
+              <div className="p-3 border-2 border-[var(--primary-color)] shadow-[2px_2px_0px_0px_#000000] bg-[var(--complementary-color-yellow)]/20">
                 <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">
-                  {new Date(presupuesto.fechaInicio + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
+                  {new Date(presupuesto.fechaInicio + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
                 </p>
               </div>
             </div>
@@ -130,10 +124,13 @@ export default function ResumenStep({ presupuesto, onEnviar, puedeEnviar, isLoad
 
           {presupuesto.fechaFin && (
             <div>
-              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2">Fecha de Final</span>
-              <div className="p-3 border-2 border-[#000000] shadow-[2px_2px_0px_0px_#000000] bg-gray-50">
+              <span className="font-bold font-clash-display text-[var(--primary-color)] text-sm block mb-2 flex items-center gap-1">
+                <CalendarIcon size={14} />
+                Fecha de Final
+              </span>
+              <div className="p-3 border-2 border-[var(--primary-color)] shadow-[2px_2px_0px_0px_#000000] bg-[var(--complementary-color-yellow)]/20">
                 <p className="text-[var(--secondary-color)] font-clash-display text-sm font-bold">
-                  {new Date(presupuesto.fechaFin + 'T00:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
+                  {new Date(presupuesto.fechaFin + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
                 </p>
               </div>
             </div>
