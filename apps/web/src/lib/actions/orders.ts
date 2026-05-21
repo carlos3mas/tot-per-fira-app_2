@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { createOrderInDB, getOrderByIdFromDB, getAllOrdersFromDB, getAllOrdersWithItemsFromDB, updateOrderStatusInDB, deleteOrderFromDB, updateOrderDatesInDB } from "@/lib/db/orders";
 import { type Presupuesto } from "@/types/presupuesto";
-import { sendWhatsAppNotification } from "@/lib/services/whatsapp-notification";
+import { sendEmailNotification } from "@/lib/services/email-notification";
 
 const createOrderSchema = z.object({
   nombreCompleto: z.string().min(1, "El nombre es obligatorio"),
@@ -27,23 +27,25 @@ const createOrderSchema = z.object({
 
 export async function createOrder(presupuesto: Presupuesto) {
   try {
-    // Validar los datos
     const validatedData = createOrderSchema.parse(presupuesto);
 
-    // Crear el pedido en la base de datos
     const result = await createOrderInDB(validatedData);
 
-    // Enviar notificación de WhatsApp (no bloqueante)
-    sendWhatsAppNotification({
+    // Enviar notificación por email (no bloqueante)
+    sendEmailNotification({
       orderId: result.orderId,
       nombreCompleto: validatedData.nombreCompleto,
+      nombrePenya: validatedData.nombrePenya,
       correoElectronico: validatedData.correoElectronico,
       numeroTelefono: validatedData.numeroTelefono,
       totalEstimado: result.totalEstimado,
-      cantidadProductos: validatedData.objetosPedido.length
+      cantidadProductos: validatedData.objetosPedido.length,
+      tipoEvento: presupuesto.tipoEvento,
+      localizacionEvento: presupuesto.localizacionEvento,
+      fechaInicio: presupuesto.fechaInicio,
+      fechaFin: presupuesto.fechaFin,
     }).catch(error => {
-      // Log del error pero no fallar la creación del pedido
-      console.error('Error enviando notificación de WhatsApp:', error);
+      console.error('Error enviando notificación de email:', error);
     });
 
     return {
